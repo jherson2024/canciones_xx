@@ -80,9 +80,24 @@ function show(data) {
     tableWrapper.appendChild(table);
 
     output.appendChild(tableWrapper);
-  } else if (typeof data === "object") {
-    output.innerHTML = "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
-  } else {
+  } else if (typeof data === "object" && data !== null) {
+  const keys = Object.keys(data);
+  const table = document.createElement("table");
+  table.innerHTML = `
+    <thead>
+      <tr>${keys.map(key => `<th>${key}</th>`).join("")}</tr>
+    </thead>
+    <tbody>
+      <tr>${keys.map(key => `<td>${data[key]}</td>`).join("")}</tr>
+    </tbody>
+  `;
+
+  const tableWrapper = document.createElement("div");
+  tableWrapper.className = "table-scroll";
+  tableWrapper.appendChild(table);
+
+  output.appendChild(tableWrapper);
+} else {
     output.textContent = data;
   }
 }
