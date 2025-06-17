@@ -17,13 +17,13 @@ std::vector<Valoracion> leerCSV(const std::string& archivo) {
     }
     return datos;
 }
-std::vector<std::pair<int, float>> usuariosSimilares(const EstadoRatings& estado, int user_id, int topP) {
-    std::vector<std::pair<int, float>> similares;
+std::vector<std::pair<int, double>> usuariosSimilares(const EstadoRatings& estado, int user_id, int topP) {
+    std::vector<std::pair<int, double>> similares;
     const auto& ratings_usuario = estado.ratings_usuario;
 
     for (const auto& [otro_id, _] : ratings_usuario) {
         if (otro_id == user_id) continue;
-        float sim = similitudEntreUsuarios(user_id, otro_id, ratings_usuario);
+        double sim = similitudEntreUsuarios(user_id, otro_id, ratings_usuario);
         similares.emplace_back(otro_id, sim);
     }
 
@@ -34,17 +34,19 @@ std::vector<std::pair<int, float>> usuariosSimilares(const EstadoRatings& estado
     if (similares.size() > topP) similares.resize(topP);
     return similares;
 }
-float similitudEntreUsuarios(
+double similitudEntreUsuarios(
     int u1, int u2,
     const std::unordered_map<int, std::unordered_map<int, float>>& ratings_por_usuario
 ) {
     const auto& r1 = ratings_por_usuario.at(u1);
     const auto& r2 = ratings_por_usuario.at(u2);
-    float num = 0, denom1 = 0, denom2 = 0;
+
+    double num = 0, denom1 = 0, denom2 = 0;
+
     for (const auto& [song_id, rating1] : r1) {
         auto it = r2.find(song_id);
         if (it != r2.end()) {
-            float rating2 = it->second;
+            double rating2 = it->second;
             num += rating1 * rating2;
             denom1 += rating1 * rating1;
             denom2 += rating2 * rating2;
@@ -52,35 +54,63 @@ float similitudEntreUsuarios(
     }
 
     if (num == 0 || denom1 == 0 || denom2 == 0) return 0;
-    return num / (std::sqrt(denom1) * std::sqrt(denom2));
+
+    double sim = num / (std::sqrt(denom1) * std::sqrt(denom2));
+    return std::min(sim, 1.0); // Clamp para evitar errores numéricos
 }
-std::vector<std::pair<int, float>> topCancionesGlobales(const EstadoRatings& estado, int topN) {
-    std::vector<std::pair<int, float>> promedios;
+
+std::vector<std::pair<int, double>> topCancionesGlobales(const EstadoRatings& estado, int topN) {
+    std::vector<std::pair<int, double>> promedios;
+    double suma_total = 0;
+    int total_ratings = 0;
+
+    // Calcular promedio global
+    for (const auto& [_, ratings] : estado.ratings_cancion) {
+        for (const auto& [__, rating] : ratings) {
+            suma_total += rating;
+            total_ratings++;
+        }
+    }
+    double global_avg = total_ratings > 0 ? suma_total / total_ratings : 0;
+    int m = 10; // número mínimo de votos deseado (puedes ajustarlo)
+
+    // Calcular promedio bayesiano para cada canción
     for (const auto& [cancion_id, ratings] : estado.ratings_cancion) {
-        float suma = 0;
+        int v = ratings.size();
+        double suma = 0;
         for (const auto& [_, rating] : ratings)
             suma += rating;
-        float promedio = suma / ratings.size();
-        promedios.emplace_back(cancion_id, promedio);
+
+        double promedio = suma / v;
+        double bayes_avg = (v * promedio + m * global_avg) / (v + m);
+
+        promedios.emplace_back(cancion_id, bayes_avg);
     }
-    std::sort(promedios.begin(), promedios.end(), [](auto& a, auto& b) {
+
+    std::sort(promedios.begin(), promedios.end(), [](const auto& a, const auto& b) {
         return a.second > b.second;
     });
+
     if (promedios.size() > topN) promedios.resize(topN);
     return promedios;
 }
-std::vector<std::pair<int, float>> topCancionesPorPromedio(const EstadoRatings& estado, int N) {
-    std::vector<std::pair<int, float>> promedios;
+
+std::vector<std::pair<int, double>> topCancionesPorPromedio(const EstadoRatings& estado, int N) {
+    std::vector<std::pair<int, double>> promedios;
+
     for (const auto& [cancion_id, ratings] : estado.ratings_cancion) {
-        float suma = 0;
+        double suma = 0;
         for (const auto& [_, rating] : ratings)
             suma += rating;
-        float promedio = suma / ratings.size();
+
+        double promedio = suma / ratings.size();
         promedios.emplace_back(cancion_id, promedio);
     }
-    std::sort(promedios.begin(), promedios.end(), [](auto& a, auto& b) {
+
+    std::sort(promedios.begin(), promedios.end(), [](const auto& a, const auto& b) {
         return a.second > b.second;
     });
+
     if (promedios.size() > N) promedios.resize(N);
     return promedios;
 }

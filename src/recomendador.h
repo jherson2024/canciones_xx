@@ -31,26 +31,20 @@ EstadoRatings construirEstructuras(const std::vector<Valoracion>& valoraciones);
 void agregarValoracion(EstadoRatings& estado, const Valoracion& v);
 void eliminarValoracion(EstadoRatings& estado, int user_id, int song_id);
 void modificarValoracion(EstadoRatings& estado, int user_id, int song_id, float nuevo_rating);
-// Top N canciones con mayor promedio de rating
-std::vector<std::pair<int, float>> topCancionesGlobales(const EstadoRatings& estado, int topN);
 
 // Top P usuarios más similares a un usuario dado
-std::vector<std::pair<int, float>> usuariosSimilares(const EstadoRatings& estado, int user_id, int topP);
+std::vector<std::pair<int, double>> usuariosSimilares(const EstadoRatings& estado, int user_id, int topP);
 
 // Similitud directa entre dos usuarios
-float similitudEntreUsuarios(
+double similitudEntreUsuarios(
     int u1, int u2,
     const std::unordered_map<int, std::unordered_map<int, float>>& ratings_por_usuario
 );
+/// Devuelve las canciones mejor valoradas globalmente (por promedio bayesiano)
+std::vector<std::pair<int, double>> topCancionesGlobales(const EstadoRatings& estado, int topN);
 
-
-std::vector<std::pair<int, float>> usuariosSimilares(
-    int usuario_id,
-    const EstadoRatings& estado,
-    int P
-);
-
-std::vector<int> popularesNoEscuchadas(const EstadoRatings& estado, int user_id, int topN);
+/// Devuelve las canciones mejor valoradas por promedio simple (sin corrección bayesiana)
+std::vector<std::pair<int, double>> topCancionesPorPromedio(const EstadoRatings& estado, int topN);
 
 float calcularSimilitud(
     int c1, int c2,

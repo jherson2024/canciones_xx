@@ -48,7 +48,7 @@ void handle_get(http_request request) {
         if (path == U("/similitud")) {
             int u1 = std::stoi(query[U("u1")]);
             int u2 = std::stoi(query[U("u2")]);
-            float sim = similitudEntreUsuarios(u1, u2, estado.ratings_usuario);
+            double sim = similitudEntreUsuarios(u1, u2, estado.ratings_usuario);
             response[U("usuario1")] = json::value::number(u1);
             response[U("usuario2")] = json::value::number(u2);
             response[U("similitud")] = json::value::number(sim);
