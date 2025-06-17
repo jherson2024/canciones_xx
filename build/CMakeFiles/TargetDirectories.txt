@@ -1,0 +1,3 @@
+C:/Users/Usuario/Documents/canciones_xx/build/CMakeFiles/mi_backend_cpp.dir
+C:/Users/Usuario/Documents/canciones_xx/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Usuario/Documents/canciones_xx/build/CMakeFiles/ZERO_CHECK.dir

@@ -1,0 +1,10 @@
+^C:\USERS\USUARIO\DOCUMENTS\CANCIONES_XX\CMAKELISTS.TXT
+setlocal
+C:\Users\Usuario\vcpkg\downloads\tools\cmake-3.30.1-windows\cmake-3.30.1-windows-i386\bin\cmake.exe -SC:/Users/Usuario/Documents/canciones_xx -BC:/Users/Usuario/Documents/canciones_xx/build --check-stamp-file C:/Users/Usuario/Documents/canciones_xx/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

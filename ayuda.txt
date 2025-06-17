@@ -1,0 +1,7 @@
+cmake .. -DCMAKE_TOOLCHAIN_FILE="C:/Users/Usuario/vcpkg/scripts/buildsystems/vcpkg.cmake"
+cmake --build . --config Release
+.\build\Release\mi_backend_cpp.exe
+
+cmake .. -DCMAKE_TOOLCHAIN_FILE="C:/Users/Usuario/vcpkg/scripts/buildsystems/vcpkg.cmake"
+cmake --build build --config Release
+.\build\Release\mi_backend_cpp.exe

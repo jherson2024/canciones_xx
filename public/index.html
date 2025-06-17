@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Recomendador de Canciones</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="main-container">
+<div class="controls">
+  <section>
+    <h2>Top N Canciones</h2>
+    <input type="number" id="topN" placeholder="N" />
+    <button onclick="getTop()">Ver</button>
+  </section>
+
+  <section>
+    <h2>Usuarios Similares</h2>
+    <input type="number" id="userSim" placeholder="ID usuario" />
+    <input type="number" id="topP" placeholder="P similares" />
+    <button onclick="getSimilares()">Ver</button>
+  </section>
+
+  <section>
+    <h2>Similitud entre dos usuarios</h2>
+    <input type="number" id="u1" placeholder="Usuario 1" />
+    <input type="number" id="u2" placeholder="Usuario 2" />
+    <button onclick="getSimilitud()">Calcular</button>
+  </section>
+
+  <section>
+    <h2>Recomendaciones para un usuario</h2>
+    <input type="number" id="userRec" placeholder="ID usuario" />
+    <button onclick="getRecomendaciones()">Obtener</button>
+  </section>
+
+  <section>
+    <h2>Agregar / Eliminar / Modificar Valoración</h2>
+    <input type="number" id="userEdit" placeholder="Usuario" />
+    <input type="number" id="songEdit" placeholder="Canción" />
+    <input type="number" step="0.1" id="ratingEdit" placeholder="Rating" />
+    <button onclick="agregar()">Agregar</button>
+    <button onclick="eliminar()">Eliminar</button>
+    <button onclick="modificar()">Modificar</button>
+  </section>
+  </div>
+   <div class="output" id="output"></div>
+</div>
+  <script>
+  const output = document.getElementById("output");
+
+function show(data) {
+  output.innerHTML = "";
+
+  if (Array.isArray(data) && data.length > 0) {
+    const keys = Object.keys(data[0]);
+
+    const table = document.createElement("table");
+    table.innerHTML = `
+      <thead>
+        <tr>${keys.map(key => `<th>${key}</th>`).join("")}</tr>
+      </thead>
+      <tbody>
+        ${data.map(item => `
+          <tr>
+            ${keys.map(key => {
+              if (key === "explicacion" && Array.isArray(item[key])) {
+                return `<td><ul>${item[key].map(txt => `<li>${txt}</li>`).join("")}</ul></td>`;
+              } else {
+                return `<td>${item[key]}</td>`;
+              }
+            }).join("")}
+          </tr>
+        `).join("")}
+      </tbody>
+    `;
+
+    const tableWrapper = document.createElement("div");
+    tableWrapper.className = "table-scroll";
+    tableWrapper.appendChild(table);
+
+    output.appendChild(tableWrapper);
+  } else if (typeof data === "object") {
+    output.innerHTML = "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+  } else {
+    output.textContent = data;
+  }
+}
+
+
+  async function getTop() {
+    const n = document.getElementById("topN").value;
+    const res = await fetch(`/top?n=${n}`);
+    show(await res.json());
+  }
+
+  async function getSimilares() {
+    const user = document.getElementById("userSim").value;
+    const p = document.getElementById("topP").value;
+    const res = await fetch(`/similares?user=${user}&p=${p}`);
+    show(await res.json());
+  }
+
+  async function getSimilitud() {
+    const u1 = document.getElementById("u1").value;
+    const u2 = document.getElementById("u2").value;
+    const res = await fetch(`/similitud?u1=${u1}&u2=${u2}`);
+    show(await res.json());
+  }
+
+  async function getRecomendaciones() {
+    const user = document.getElementById("userRec").value;
+    const res = await fetch(`/recomendar?user=${user}`);
+    show(await res.json());
+  }
+
+  async function agregar() {
+    const user = document.getElementById("userEdit").value;
+    const song = document.getElementById("songEdit").value;
+    const rating = document.getElementById("ratingEdit").value;
+    const res = await fetch(`/agregar?user=${user}&song=${song}&rating=${rating}`);
+    show(await res.json());
+  }
+
+  async function eliminar() {
+    const user = document.getElementById("userEdit").value;
+    const song = document.getElementById("songEdit").value;
+    const res = await fetch(`/eliminar?user=${user}&song=${song}`);
+    show(await res.json());
+  }
+
+  async function modificar() {
+    const user = document.getElementById("userEdit").value;
+    const song = document.getElementById("songEdit").value;
+    const rating = document.getElementById("ratingEdit").value;
+    const res = await fetch(`/modificar?user=${user}&song=${song}&rating=${rating}`);
+    show(await res.json());
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+^C:\USERS\USUARIO\DOCUMENTS\CHESS_XX\CMAKEFILES\B4C2FBF30717A7400B115E9E287ABC22\GENERATE.STAMP.RULE
+setlocal
+C:\Users\Usuario\vcpkg\downloads\tools\cmake-3.30.1-windows\cmake-3.30.1-windows-i386\bin\cmake.exe -SC:/Users/Usuario/Documents/chess_xx -BC:/Users/Usuario/Documents/chess_xx --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/Usuario/Documents/chess_xx/mi_backend_cpp.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

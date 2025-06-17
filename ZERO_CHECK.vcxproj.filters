@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Usuario\Documents\chess_xx\CMakeFiles\b4c2fbf30717a7400b115e9e287abc22\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{AD35BE1B-7432-3BBD-BDAA-C9CF82CB20E4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

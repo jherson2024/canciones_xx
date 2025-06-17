@@ -1,0 +1,131 @@
+/* Fuente y fondo general */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0em;
+  background-color: #fdfdfd;
+  color: #333;
+}
+
+/* Contenedor principal con layout flexible */
+.main-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  align-items: flex-start;
+}
+/* Controles (formulario de la izquierda) */
+.controls {
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+.controls section {
+  margin-bottom: 0em;
+  padding: 0.5em;
+  border-radius: 8px;
+  background-color: #f4f7fa;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+.controls h2 {
+  margin-top: 0;
+  font-size: 1.2em;
+  color: #000000;
+}
+input, button {
+  display: inline-block;
+  margin: 0.2em 0.1em;
+  padding: 0.4em 0.6em;
+  font-size: 1em;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+button {
+  background-color: #000000;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #4c5155;
+}
+
+/* Resultado (tabla a la derecha) */
+.output {
+  flex: 2 1 500px;
+  max-width: 800px;
+  border: 1px solid #ddd;
+  padding: 0em;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+/* Tabla de resultados */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0px;
+}
+.table-scroll {
+  max-height: 800px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f0f4f8;
+  z-index: 1;
+}
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background-color: #f0f4f8;
+  color: #333;
+  font-weight: 600;
+}
+
+.output ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.output li {
+  margin-bottom: 0em;
+  line-height: 1.4;
+}
+.output td ul {
+  max-height: 150px;
+  overflow-y: auto;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.output td ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.output td ul::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+/* Responsive: apilar en pantallas pequeñas */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .controls, .output {
+    max-width: 100%;
+  }
+}
